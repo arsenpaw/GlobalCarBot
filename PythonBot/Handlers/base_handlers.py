@@ -4,7 +4,6 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message, InputFile, FSInputFile
 from aiogram import Bot, Dispatcher, F, Router
 from keyboards import start_keyboard
-from keyboards import cars_in_stock
 from aiogram.fsm.context import FSMContext
 
 router = Router()
