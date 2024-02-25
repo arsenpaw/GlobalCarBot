@@ -4,7 +4,7 @@ from aiogram.types import Message, InputFile, FSInputFile
 from aiogram import Bot, Dispatcher, F, Router
 from keyboards import *
 from aiogram.fsm.context import FSMContext
-from  utils.states import *
+from utils.states import *
 from Handlers.base_handlers import connect_to_manager
 
 router = Router()
