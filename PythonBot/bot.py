@@ -14,9 +14,10 @@ async def main():
                         level=logging.INFO)
     logging.info('Program Started !!!')
     bot = Bot(config.bot_token.get_secret_value(), parse_mode='HTML')
+    logging.info(f'Server is: {bot.session.api.base}')
     dp = Dispatcher(bot=bot)
     #dp.include_routers()
-    logging.info(f'Server is: {bot.session.api.base}')
+
     await dp.start_polling(bot, skip_updates=True)
 
 if __name__ == "__main__":
