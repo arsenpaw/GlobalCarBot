@@ -7,3 +7,4 @@ Log.log
 venv
 _venv
 _env
+.log
