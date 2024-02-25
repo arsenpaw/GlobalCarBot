@@ -19,3 +19,8 @@ async def command_start_handler(message: Message) -> None:
 async def back_to_menu(message: Message):
     logging.info("/main menu command")
     await message.answer('Ви в головному меню', reply_markup=start_keyboard.start_kb)
+
+@router.message(F.text.lower() == 'звязок з менеджером')
+async def connect_to_manager(message: Message):
+    logging.info("connect_to_manager")
+    await message.answer('ТУТ БУДЕ ЗВЯЗОК З МЕНЕДЖЕРОМ', reply_markup=start_keyboard.back_bome_kb)

@@ -22,3 +22,26 @@ start_kb = ReplyKeyboardMarkup(
     resize_keyboard=True,
     one_time_keyboard=True
 )
+
+consult_and_main_kb= ReplyKeyboardMarkup(
+    keyboard=[
+        [
+         KeyboardButton(text='Звязок з менеджером'),
+        ],
+        [
+         KeyboardButton(text='Головне меню')
+        ]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=True
+)
+
+back_bome_kb= ReplyKeyboardMarkup(
+    keyboard=[
+        [
+         KeyboardButton(text='Головне меню')
+        ]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=True
+)
