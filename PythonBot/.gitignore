@@ -5,3 +5,5 @@
 Log.log
 .venv
 venv
+_venv
+_env
