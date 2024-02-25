@@ -19,3 +19,10 @@ async def command_start_handler(message: Message) -> None:
 async def back_to_menu(message: Message):
     logging.info("/main menu command")
     await message.answer('Ви в головному меню', reply_markup=start_keyboard.start_kb)
+
+@router.message(F.text.lower() == 'авто в наявності')
+async def command_start_handler(message: Message) -> None:
+    logging.info("/command start")
+    await message.answer(f"Який ваш бюджет для купівлі авто?",
+                         reply_markup=start_keyboard.auto_cost_in_stock_kb)
+
