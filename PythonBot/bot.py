@@ -1,5 +1,8 @@
 import logging
 import asyncio
+from config_reader import config
+from aiogram import Bot, Dispatcher
+from aiogram.client.session.aiohttp import AiohttpSession
 
 
 async def main():
@@ -10,6 +13,11 @@ async def main():
                         datefmt='%m.%d.%Y %H:%M:%S',
                         level=logging.INFO)
     logging.info('Program Started !!!')
+    bot = Bot(config.bot_token.get_secret_value(), parse_mode='HTML')
+    dp = Dispatcher(bot=bot)
+    #dp.include_routers()
+    logging.info(f'Server is: {bot.session.api.base}')
+    await dp.start_polling(bot, skip_updates=True)
 
 if __name__ == "__main__":
     asyncio.run(main())
