@@ -14,13 +14,34 @@ start_kb = ReplyKeyboardMarkup(
         [
          KeyboardButton(text='Авто на підбір'),
          KeyboardButton(text='Отримати CarFax')
+        ]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=True
+)
+
+consult_and_main_kb= ReplyKeyboardMarkup(
+    keyboard=[
+        [
+         KeyboardButton(text='Звязок з менеджером'),
         ],
+        [
+         KeyboardButton(text='Головне меню')
+        ]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=True
+)
+
+back_bome_kb= ReplyKeyboardMarkup(
+    keyboard=[
         [
          KeyboardButton(text='В головне меню')
         ]
     ],
     resize_keyboard=True,
     one_time_keyboard=True
+<<<<<<< HEAD
 )
 
 
@@ -40,4 +61,6 @@ auto_cost_in_stock_kb = ReplyKeyboardMarkup(
     ],
     resize_keyboard=True,
     one_time_keyboard=True
+=======
+>>>>>>> 020e6800a06dcdf629c0d1766ce8ea8a5737d7cc
 )
