@@ -22,13 +22,6 @@ async def back_to_menu(message: Message):
     await message.answer('Ви в головному меню', reply_markup=start_keyboard.start_kb)
 
 
-@router.message(F.text.lower() == 'авто в наявності')
-async def command_start_handler(message: Message) -> None:
-    logging.info("/command start")
-    await message.answer(f"Який ваш бюджет для купівлі авто?",
-                         reply_markup=start_keyboard.auto_cost_in_stock_kb)
-
-
 @router.message(F.text.lower() == 'звязок з менеджером')
 async def connect_to_manager(message: Message,state:FSMContext):
     await state.clear()
