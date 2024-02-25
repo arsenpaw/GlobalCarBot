@@ -9,3 +9,5 @@ _venv
 _env
 Log
 log
+.log
+.Log
