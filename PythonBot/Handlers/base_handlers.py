@@ -4,6 +4,7 @@ from aiogram.filters import CommandStart
 from aiogram.types import Message, InputFile, FSInputFile
 from aiogram import Bot, Dispatcher, F, Router
 from keyboards import start_keyboard
+from aiogram.fsm.context import FSMContext
 
 router = Router()
 
@@ -21,6 +22,7 @@ async def back_to_menu(message: Message):
     await message.answer('Ви в головному меню', reply_markup=start_keyboard.start_kb)
 
 @router.message(F.text.lower() == 'звязок з менеджером')
-async def connect_to_manager(message: Message):
+async def connect_to_manager(message: Message,state:FSMContext):
+    await state.clear()
     logging.info("connect_to_manager")
     await message.answer('ТУТ БУДЕ ЗВЯЗОК З МЕНЕДЖЕРОМ', reply_markup=start_keyboard.back_bome_kb)

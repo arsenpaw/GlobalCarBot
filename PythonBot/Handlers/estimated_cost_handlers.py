@@ -27,7 +27,7 @@ async def wait_data_input(message: Message,state:FSMContext) -> None:
     logging.info("User input")
     logging.info(message.text)
     if message.text.lower() == 'звязатись з менеджером':
-        await connect_to_manager(message)
+        await connect_to_manager(message,state)
     else:
         await message.answer(f"Інформацію збережено.")
         await message.answer(f"Щоб отрмати детальнішу інформацію по даному автомобілю "

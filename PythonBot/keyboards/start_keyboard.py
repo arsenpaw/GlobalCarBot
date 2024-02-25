@@ -14,9 +14,6 @@ start_kb = ReplyKeyboardMarkup(
         [
          KeyboardButton(text='Авто на підбір'),
          KeyboardButton(text='Отримати CarFax')
-        ],
-        [
-         KeyboardButton(text='В головне меню')
         ]
     ],
     resize_keyboard=True,
@@ -39,7 +36,7 @@ consult_and_main_kb= ReplyKeyboardMarkup(
 back_bome_kb= ReplyKeyboardMarkup(
     keyboard=[
         [
-         KeyboardButton(text='Головне меню')
+         KeyboardButton(text='В головне меню')
         ]
     ],
     resize_keyboard=True,
