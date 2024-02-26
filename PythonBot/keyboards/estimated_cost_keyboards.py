@@ -9,7 +9,7 @@ individual_cost_kb = ReplyKeyboardMarkup(
     keyboard=[
         [
          KeyboardButton(text='Звязок з менеджером'),
-         KeyboardButton(text='Отрмати прорахунок')
+         KeyboardButton(text='Отрмати прорахунок', request_contact=True)
         ],
         [
          KeyboardButton(text='Головне меню')
