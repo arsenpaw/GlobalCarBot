@@ -12,11 +12,6 @@ from  methods.user_filter_to_db import *
 
 router = Router()
 
-
-db = sqlite3.connect("database/clients.db")
-cur = db.cursor()
-
-
 @router.message(F.text.lower() == 'вартість під ключ')
 async def estimated_cost_handler(message: Message,state:FSMContext) -> None:
     logging.info("/estimated cose")
@@ -51,16 +46,17 @@ async def after_data_provided(message: Message,state:FSMContext) -> None:
     except Exception as ex:
         logging.error(f'ERROR IN PARSING 1 BUTTON, {ex}')
     try:
-        query = (""" INSERT INTO CertainCar
-            (client_id,client_name,car_to_find,client_phone,time)
-            VALUES (?, ?, ?,?,?)
-            """)
-        values = (dict_user_info['user_id'],dict_user_info['user_name'], car,dict_user_info['phone_number'],dict_user_info['time'])
-        cur.execute(query, values)
-        db.commit()
+        with sqlite3.connect("database/clients.db") as db:
+            cur = db.cursor()
+            query = (""" INSERT INTO CertainCar
+                (client_id,client_name,car_to_find,client_phone,time)
+                VALUES (?, ?, ?,?,?)
+                """)
+            values = (dict_user_info['user_id'],dict_user_info['user_name'], car,dict_user_info['phone_number'],dict_user_info['time'])
+            cur.execute(query, values)
+            db.commit()
     except Exception as ex:
         logging.error(f'ERROR IN FIRST BUTTON  DB, {ex}')
     finally:
         result = await is_object_added(cur)
         await send_status_to_user(message,result)
-        db.close()
