@@ -5,3 +5,4 @@ class BotStates(StatesGroup):
     contact_to_user_about_info = State()
     price_selection = State()
     year_selection = State()
+    carfax_get_info = State()
