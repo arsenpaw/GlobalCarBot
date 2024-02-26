@@ -1,4 +1,5 @@
 import logging
+import sqlite3 as sqlite
 
 from aiogram.types import Message, InputFile, FSInputFile
 from aiogram import Bot, Dispatcher, F, Router
@@ -30,13 +31,13 @@ async def wait_data_input(message: Message,state:FSMContext) -> None:
     logging.info("User input")
     await state.update_data(user_car_info = message.text)
     current_state = await state.get_state()
-    logging.info("Cancelling state %r", current_state)
     logging.info(message.text)
     if message.text.lower() == 'звязатись з менеджером':
         await state.clear() #changes
         await connect_to_manager(message,state)
     else:
-        await state.clear()  # changes
+        with sqlite.connect("clients.db") as con:
+            cur = con.execute()
         await message.answer(f"Інформацію збережено.")
         await state.set_state(BotStates.contact_to_user_about_info)
         await message.answer(f"Щоб отрмати детальнішу інформацію по даному автомобілю "
