@@ -12,7 +12,7 @@ individual_cost_kb = ReplyKeyboardMarkup(
          KeyboardButton(text='Отрмати прорахунок')
         ],
         [
-         KeyboardButton(text='В головне меню')
+         KeyboardButton(text='Головне меню')
         ]
     ],
     resize_keyboard=True,

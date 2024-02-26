@@ -36,7 +36,7 @@ consult_and_main_kb= ReplyKeyboardMarkup(
 back_bome_kb= ReplyKeyboardMarkup(
     keyboard=[
         [
-         KeyboardButton(text='В головне меню')
+         KeyboardButton(text='Головне меню')
         ]
     ],
     resize_keyboard=True,
