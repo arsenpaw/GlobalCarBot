@@ -38,6 +38,12 @@ async def wait_data_input(message: Message,state:FSMContext) -> None:
     else:
         await state.clear()  # changes
         await message.answer(f"Інформацію збережено.")
+        await state.set_state(BotStates.contact_to_user_about_info)
         await message.answer(f"Щоб отрмати детальнішу інформацію по даному автомобілю "
                           f"\n натисніть 'Отримати прорахунок' aбо звяжіться з менеджером",
                          reply_markup=estimated_cost_keyboards.individual_cost_kb)
+
+@router.message(BotStates.contact_to_user_about_info)
+async def after_data_provided(message: Message,state:FSMContext) -> None:
+    await state.update_data(contact_to_user_about_info = message.text)
+    logging.info('feedbeck about estimate car')
