@@ -40,3 +40,16 @@ cars_year_in_stock_kb = ReplyKeyboardMarkup(
     resize_keyboard=True,
     one_time_keyboard=True
 )
+
+send_contact = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+         KeyboardButton(text='Отримати підбірку'),
+        ],
+        [
+         KeyboardButton(text='Головне меню')
+        ]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=True
+)
