@@ -12,3 +12,5 @@ log
 .log
 .Log
 __pycache__
+.DS_store
+DS_store

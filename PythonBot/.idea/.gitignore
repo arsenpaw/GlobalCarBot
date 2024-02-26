@@ -3,3 +3,5 @@
 /workspace.xml
 .env
 Log.log
+.DS_store
+DS_store
