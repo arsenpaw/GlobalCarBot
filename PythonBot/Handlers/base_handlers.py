@@ -17,14 +17,14 @@ async def command_start_handler(message: Message) -> None:
 
 
 @router.message(F.text.lower() == 'головне меню')
-async def back_to_menu(message: Message):
+async def back_to_menu(message: Message,state:FSMContext):
+    await state.clear()
     logging.info("/main menu command")
     await message.answer('Ви в головному меню', reply_markup=start_keyboard.start_kb)
 
 
 @router.message(F.text.lower() == 'звязок з менеджером')
 async def connect_to_manager(message: Message,state:FSMContext):
-    await state.clear()
     logging.info("connect_to_manager")
     await message.answer('ТУТ БУДЕ ЗВЯЗОК З МЕНЕДЖЕРОМ', reply_markup=start_keyboard.back_bome_kb)
 
