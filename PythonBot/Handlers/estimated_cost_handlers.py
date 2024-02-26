@@ -6,9 +6,10 @@ from keyboards import *
 from aiogram.fsm.context import FSMContext
 from utils.states import *
 from Handlers.base_handlers import connect_to_manager
-from  utils import *
+
 
 router = Router()
+
 
 
 
@@ -29,7 +30,8 @@ async def wait_data_input(message: Message,state:FSMContext) -> None:
     logging.info("User input")
     await state.update_data(user_car_info = message.text)
     current_state = await state.get_state()
-
+    data = await state.get_data()
+    print(data)
     logging.info("Cancelling state %r", current_state)
     logging.info(message.text)
     if message.text.lower() == 'звязатись з менеджером':
@@ -47,3 +49,4 @@ async def wait_data_input(message: Message,state:FSMContext) -> None:
 async def after_data_provided(message: Message,state:FSMContext) -> None:
     await state.update_data(contact_to_user_about_info = message.text)
     logging.info('feedbeck about estimate car')
+
