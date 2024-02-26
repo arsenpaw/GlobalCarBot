@@ -17,7 +17,7 @@ async def main():
     bot = Bot(config.bot_token.get_secret_value(), parse_mode='HTML')
     logging.info(f'Server is: {bot.session.api.base}')
     dp = Dispatcher(bot=bot)
-    dp.include_routers(base_handlers.router, estimated_cost_handlers.router )
+    dp.include_routers(base_handlers.router, estimated_cost_handlers.router, cars_in_stock_handlers.router )
 
     await dp.start_polling(bot, skip_updates=True)
 

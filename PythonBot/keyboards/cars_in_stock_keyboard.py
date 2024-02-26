@@ -16,7 +16,7 @@ cars_cost_in_stock_kb = ReplyKeyboardMarkup(
          KeyboardButton(text='20 000$ +')
         ],
         [
-         KeyboardButton(text='В головне меню')
+         KeyboardButton(text='Головне меню')
         ]
     ],
     resize_keyboard=True,
