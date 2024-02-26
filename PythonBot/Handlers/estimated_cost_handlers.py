@@ -7,7 +7,7 @@ from aiogram import Bot, Dispatcher, F, Router
 from keyboards import *
 from aiogram.fsm.context import FSMContext
 from utils.states import *
-from Handlers.base_handlers import connect_to_manager
+from database.database_methods import *
 
 router = Router()
 
@@ -43,18 +43,26 @@ async def wait_data_input(message: Message,state:FSMContext) -> None:
 async def after_data_provided(message: Message,state:FSMContext) -> None:
     dict_car = await state.get_data()
     user_info_dict = message.contact
-    car = str(dict_car.values())
-
-    query = (""" INSERT INTO CertainCar
-        (client_id,client_name,car_to_find,client_phone,time)
-        VALUES (?, ?, ?,?,?)
-        """)
-    message_date = str(message.date)
-    logging.info(user_info_dict)
-    client_phone = (user_info_dict.phone_number)
-    full_name = str(user_info_dict.first_name + user_info_dict.last_name)
-    logging.info = (f'User info to table {user_info_dict.user_id},{full_name}, {car},{client_phone},{message_date}')
-    values = (user_info_dict.user_id,full_name, car,client_phone,message_date)
-    cur.execute(query, values)
-    db.commit()
-    db.close()
+    car = ''.join(str(value) for value in dict_car.values())
+    try:
+        message_date = str(message.date)
+        logging.info(user_info_dict)
+        client_phone = (user_info_dict.phone_number)
+        full_name = str(user_info_dict.first_name + user_info_dict.last_name)
+        logging.info(f'User info to table {user_info_dict.user_id},{full_name}, {car},{client_phone},{message_date}')
+    except Exception as ex:
+        logging.error(f'ERROR IN PARSING 1 BUTTON, {ex}')
+    try:
+        query = (""" INSERT INTO CertainCar
+            (client_id,client_name,car_to_find,client_phone,time)
+            VALUES (?, ?, ?,?,?)
+            """)
+        values = (user_info_dict.user_id,full_name, car,client_phone,message_date)
+        cur.execute(query, values)
+        db.commit()
+    except Exception as ex:
+        logging.error(f'ERROR IN FIRST BUTTON  DB, {ex}')
+    finally:
+        result = await is_object_added(cur)
+        await send_status_to_user(message,result)
+        db.close()
