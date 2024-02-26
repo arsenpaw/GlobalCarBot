@@ -4,3 +4,4 @@
 .env
 Log.log
 .log
+__pycache__
