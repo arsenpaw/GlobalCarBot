@@ -11,3 +11,4 @@ Log
 log
 .log
 .Log
+__pycache__
