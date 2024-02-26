@@ -28,5 +28,6 @@ async def cars_year_in_stock(message: Message ,state: FSMContext):
 async def cars_year_in_stock(message: Message ,state: FSMContext):
     await state.update_data(year_select = message.text)
     logging.info("contact")
+    ##sql
     await message.answer('Дані підтверждено✅')
     await message.answer('Натисніть на кнопку Отримати підбірку , щоб чат-бот надіслав відповідні варіанти під ваш запит в Telegram👇', reply_markup=cars_in_stock_keyboard.send_contact)

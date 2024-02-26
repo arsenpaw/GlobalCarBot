@@ -30,8 +30,6 @@ async def wait_data_input(message: Message,state:FSMContext) -> None:
     logging.info("User input")
     await state.update_data(user_car_info = message.text)
     current_state = await state.get_state()
-    data = await state.get_data()
-    print(data)
     logging.info("Cancelling state %r", current_state)
     logging.info(message.text)
     if message.text.lower() == 'звязатись з менеджером':
