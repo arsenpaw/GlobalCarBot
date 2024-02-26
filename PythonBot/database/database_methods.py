@@ -7,7 +7,7 @@ from aiogram import Bot, Dispatcher, F, Router
 async def is_object_added(cur: sqlite.Cursor)->bool:
     logging.info(msg = 'is_object_added')
 
-    if cur.fetchall() is True:
+    if cur.rowcount > 0:
         logging.info(f'IS USER ADD TO TABLE: TRUE')
         return True
     else:
