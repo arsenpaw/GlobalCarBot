@@ -8,6 +8,7 @@ from keyboards import *
 from aiogram.fsm.context import FSMContext
 from utils.states import *
 from database.database_methods import *
+from  methods.user_filter_to_db import *
 
 router = Router()
 
@@ -41,15 +42,12 @@ async def wait_data_input(message: Message,state:FSMContext) -> None:
 
 @router.message(BotStates.contact_to_user_about_info)
 async def after_data_provided(message: Message,state:FSMContext) -> None:
-    dict_car = await state.get_data()
-    user_info_dict = message.contact
-    car = ''.join(str(value) for value in dict_car.values())
+    logging.info('after_data_provided')
     try:
-        message_date = str(message.date)
-        logging.info(user_info_dict)
-        client_phone = (user_info_dict.phone_number)
-        full_name = str(user_info_dict.first_name + user_info_dict.last_name)
-        logging.info(f'User info to table {user_info_dict.user_id},{full_name}, {car},{client_phone},{message_date}')
+        dict_car = await state.get_data()
+        car = ''.join(str(value) for value in dict_car.values())
+        logging.info(f'Selected car {car}')
+        dict_user_info = await get_basic_info(message)
     except Exception as ex:
         logging.error(f'ERROR IN PARSING 1 BUTTON, {ex}')
     try:
@@ -57,7 +55,7 @@ async def after_data_provided(message: Message,state:FSMContext) -> None:
             (client_id,client_name,car_to_find,client_phone,time)
             VALUES (?, ?, ?,?,?)
             """)
-        values = (user_info_dict.user_id,full_name, car,client_phone,message_date)
+        values = (dict_user_info['user_id'],dict_user_info['user_name'], car,dict_user_info['phone_number'],dict_user_info['time'])
         cur.execute(query, values)
         db.commit()
     except Exception as ex:
