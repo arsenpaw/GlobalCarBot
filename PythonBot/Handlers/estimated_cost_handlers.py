@@ -5,7 +5,7 @@ from aiogram.types import *
 from aiogram.types import Message, InputFile, FSInputFile
 from aiogram import Bot, Dispatcher, F, Router
 
-import Handlers.base_handlers
+from Handlers.base_handlers import *
 from keyboards import *
 from aiogram.fsm.context import FSMContext
 from utils.states import *
@@ -34,7 +34,7 @@ async def wait_data_input(message: Message,state:FSMContext) -> None:
     await state.update_data(user_car_info = message.text)
     logging.info(message.contact)
     if message.contact is not None:
-        await Handlers.base_handlers.connect_to_manager(message,state)
+        await connect_to_manager(message,state)
     else:
         await message.answer(f"Інформацію збережено.")
         await state.set_state(BotStates.contact_to_user_about_info)
