@@ -12,6 +12,7 @@ from utils.states import *
 from database.database_methods import *
 from  methods.user_filter_to_db import *
 
+
 router = Router()
 
 @router.message(F.text.lower() == 'вартість під ключ')
@@ -67,3 +68,4 @@ async def after_data_provided(message: Message,state:FSMContext) -> None:
     finally:
         result = await is_object_added(cur)
         await send_status_to_user(message,result)
+        await message.answer(text='Верніться в головне меню', reply_markup=start_keyboard.back_bome_kb)
