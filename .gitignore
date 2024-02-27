@@ -1,2 +1,5 @@
 
 .venv/bin/activate
+*.db
+clients.db
+clients
