@@ -8,7 +8,7 @@ from aiogram.types import (
 individual_cost_kb = ReplyKeyboardMarkup(
     keyboard=[
         [
-         KeyboardButton(text='Звязок з менеджером'),
+         KeyboardButton(text='Звязок з менеджером', request_contact=True),
          KeyboardButton(text='Отрмати прорахунок', request_contact=True)
         ],
         [

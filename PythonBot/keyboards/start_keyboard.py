@@ -23,7 +23,7 @@ start_kb = ReplyKeyboardMarkup(
 consult_and_main_kb= ReplyKeyboardMarkup(
     keyboard=[
         [
-         KeyboardButton(text='Звязок з менеджером'),
+         KeyboardButton(text='Звязок з менеджером', request_contact=True),
         ],
         [
          KeyboardButton(text='Головне меню')

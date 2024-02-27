@@ -4,6 +4,8 @@ import sqlite3
 from aiogram.types import *
 from aiogram.types import Message, InputFile, FSInputFile
 from aiogram import Bot, Dispatcher, F, Router
+
+import Handlers.base_handlers
 from keyboards import *
 from aiogram.fsm.context import FSMContext
 from utils.states import *
@@ -23,15 +25,20 @@ async def estimated_cost_handler(message: Message,state:FSMContext) -> None:
                          f"- тощо",
                          reply_markup = start_keyboard.consult_and_main_kb)
 
-
+@router.message(BotStates.user_car_info, F.text == 'звязок з менеджером')
+async def wait_connect_to_manager(message: Message,state:FSMContext) -> None:
+    await state.set_state(BotStates.contact_with_manager)
 @router.message(BotStates.user_car_info)
 async def wait_data_input(message: Message,state:FSMContext) -> None:
     logging.info("User input")
     await state.update_data(user_car_info = message.text)
-    logging.info(message.text)
-    await message.answer(f"Інформацію збережено.")
-    await state.set_state(BotStates.contact_to_user_about_info)
-    await message.answer(f"Щоб отрмати детальнішу інформацію по даному автомобілю "
+    logging.info(message.contact)
+    if message.contact is not None:
+        await Handlers.base_handlers.connect_to_manager(message,state)
+    else:
+        await message.answer(f"Інформацію збережено.")
+        await state.set_state(BotStates.contact_to_user_about_info)
+        await message.answer(f"Щоб отрмати детальнішу інформацію по даному автомобілю "
                           f"\n натисніть 'Отримати прорахунок' aбо звяжіться з менеджером",
                          reply_markup=estimated_cost_keyboards.individual_cost_kb)
 
