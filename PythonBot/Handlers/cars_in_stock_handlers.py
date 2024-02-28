@@ -95,7 +95,16 @@ async def send_car_items(message: Message ,state: FSMContext,rows,bot:Bot):
         car_name = row[4]
         car_description = row[5]
         short_info_for_manager = f'{str(car_name)},{str(price)}$,{str(year)}р'
-        await bot.send_photo(chat_id=message.chat.id ,photo=photo,reply_markup=car_ikb(short_info_for_manager),caption=f"{car_name}\n"
-                                                                          f"Рік {year}р \n"
-                                                                          f"Ціна {price}$\n"
-                                                                          f"Опис {car_description}")
+        try:
+            await bot.send_photo(chat_id=message.chat.id ,photo=photo,reply_markup=car_ikb(short_info_for_manager),caption=f"{car_name}\n"
+                                                                              f"Рік {year}р \n"
+                                                                              f"Ціна {price}$\n"
+                                                                              f"Опис {car_description}")
+        except Exception as ex:
+            logging.warning(f'PICTURE DIDNT FOUND{ex}')
+            photo = FSInputFile(r"database\CarPhotos\unknown.jpg")
+            await bot.send_photo(chat_id=message.chat.id, photo=photo, reply_markup=car_ikb(short_info_for_manager),
+                                 caption=f"{car_name}\n"
+                                         f"Рік {year}р \n"
+                                         f"Ціна {price}$\n"
+                                         f"Опис {car_description}")
