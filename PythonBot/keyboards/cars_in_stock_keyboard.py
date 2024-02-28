@@ -31,7 +31,7 @@ cars_year_in_stock_kb = ReplyKeyboardMarkup(
         ],
         [
          KeyboardButton(text='2013-2018'),
-         KeyboardButton(text='2019-2024')
+         KeyboardButton(text='2019 + ')
         ],
         [
          KeyboardButton(text='Головне меню')
