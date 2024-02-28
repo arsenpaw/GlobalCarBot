@@ -6,7 +6,7 @@ from aiogram import Bot, Dispatcher, F, Router
 from keyboards import cars_in_stock_keyboard
 from utils.states import *
 from aiogram.fsm.context import FSMContext
-
+from keyboards.start_keyboard import *
 
 router = Router()
 
@@ -66,14 +66,28 @@ async def handle_data_to_sql(message: Message ,state: FSMContext):
         with sqlite3.connect("database/clients.db") as db:
             cur = db.cursor()
             query = (""" SELECT * FROM CarShop
-                WHERE car_price BETWEEN ? AND ?
+                WHERE car_cost BETWEEN ? AND ?
                 AND car_year BETWEEN ? AND ?
                 """)
             values = (min_price, max_price,min_year,max_year)
             cur.execute(query, values)
             rows = cur.fetchall()
-            for row in rows:
-                print(row)
+            logging.info(f"SQL RESPONCE {rows}")
+            if len(rows) == 0:
+                await message.answer('Поки що у нас немає таких автомобілів в наявості, але ми обовязково привизем їх на замовлення.', reply_markup=consult_and_main_kb)
+            else:
+                await send_car_items(message,state,rows)
+
 
     except Exception as ex:
         logging.error(f'ERROR FIND IN SQL WHEN SEARCH OUR CARS (CARS IN STOCK)  DB, {ex}')
+
+
+async def send_car_items(message: Message ,state: FSMContext,rows):
+    for row in rows:
+        path_to_photo = row[1]
+        year = row[2]
+        price = row[3]
+        car_name = row[4]
+        car_description = row[5]
+        print(row)
