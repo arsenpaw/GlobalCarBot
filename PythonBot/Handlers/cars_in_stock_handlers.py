@@ -1,4 +1,5 @@
 import logging
+import sqlite3
 
 from aiogram.types import Message, InputFile, FSInputFile
 from aiogram import Bot, Dispatcher, F, Router
@@ -52,11 +53,27 @@ async def handle_data_to_sql(message: Message ,state: FSMContext):
 
     price_text = user_input['price_selection']
     price_range_list = await handle_price(price_text)
-    logging.info(f'Choseb price {price_range_list}')
+    logging.info(f'Chosen price {price_range_list}')
 
     year_text = user_input['year_select']
     year_range_list = await handle_year(year_text)
-    logging.info(f'Choseb year {year_range_list}')
+    logging.info(f'Chosen year {year_range_list}')
+    min_year = year_range_list[0]
+    max_year = year_range_list[1]
+    min_price = price_range_list[0]
+    max_price= price_range_list[1]
+    try:
+        with sqlite3.connect("database/clients.db") as db:
+            cur = db.cursor()
+            query = (""" SELECT * FROM CarShop
+                WHERE car_price BETWEEN ? AND ?
+                AND car_year BETWEEN ? AND ?
+                """)
+            values = (min_price, max_price,min_year,max_year)
+            cur.execute(query, values)
+            rows = cur.fetchall()
+            for row in rows:
+                print(row)
 
-    await message.answer('Дані підтверждено✅')
-    await message.answer('Натисніть на кнопку Отримати підбірку , щоб чат-бот надіслав відповідні варіанти під ваш запит в Telegram👇', reply_markup=cars_in_stock_keyboard.send_contact)
+    except Exception as ex:
+        logging.error(f'ERROR FIND IN SQL WHEN SEARCH OUR CARS (CARS IN STOCK)  DB, {ex}')
