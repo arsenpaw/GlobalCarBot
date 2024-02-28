@@ -1,6 +1,7 @@
 import logging
 import sqlite3
 
+
 from aiogram.types import Message, InputFile, FSInputFile
 from aiogram import Bot, Dispatcher, F, Router
 from keyboards import cars_in_stock_keyboard
@@ -47,7 +48,7 @@ async def handle_year(year:str)->list:
         return [2019, 3000]
 
 @router.message(BotStates.year_selection)
-async def handle_data_to_sql(message: Message ,state: FSMContext):
+async def handle_data_to_sql(message: Message ,state: FSMContext,bot:Bot):
     await state.update_data(year_select = message.text)
     user_input: dict = await state.get_data()
 
@@ -76,18 +77,24 @@ async def handle_data_to_sql(message: Message ,state: FSMContext):
             if len(rows) == 0:
                 await message.answer('Поки що у нас немає таких автомобілів в наявості, але ми обовязково привизем їх на замовлення.', reply_markup=consult_and_main_kb)
             else:
-                await send_car_items(message,state,rows)
+                await send_car_items(message,state,rows,bot)
 
 
     except Exception as ex:
         logging.error(f'ERROR FIND IN SQL WHEN SEARCH OUR CARS (CARS IN STOCK)  DB, {ex}')
 
 
-async def send_car_items(message: Message ,state: FSMContext,rows):
+async def send_car_items(message: Message ,state: FSMContext,rows,bot:Bot):
     for row in rows:
         path_to_photo = row[1]
+        logging.info(path_to_photo)
+        photo = FSInputFile(f"{path_to_photo}")
+
         year = row[2]
         price = row[3]
         car_name = row[4]
         car_description = row[5]
-        print(row)
+        await bot.send_photo(chat_id=message.chat.id ,photo=photo,caption=f"{car_name}\n"
+                                                                          f"Рік {year}р \n"
+                                                                          f"Ціна {price}$\n"
+                                                                          f"Опис {car_description}")
