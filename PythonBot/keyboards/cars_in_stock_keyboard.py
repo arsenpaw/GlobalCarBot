@@ -4,6 +4,12 @@ from aiogram.types import (
     ReplyKeyboardMarkup,
     KeyboardButton
 )
+from  aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
+def car_ikb(short_info:str):
+    builder = InlineKeyboardBuilder()
+
+    builder.button(text='Докладніше',callback_data=short_info)
+    return builder.as_markup(resize_keyboard=True)
 
 cars_cost_in_stock_kb = ReplyKeyboardMarkup(
     keyboard=[
@@ -44,7 +50,7 @@ cars_year_in_stock_kb = ReplyKeyboardMarkup(
 send_contact = ReplyKeyboardMarkup(
     keyboard=[
         [
-         KeyboardButton(text='Отримати підбірку'),
+         KeyboardButton(text='Отримати інформацію', request_contact=True),
         ],
         [
          KeyboardButton(text='Головне меню')

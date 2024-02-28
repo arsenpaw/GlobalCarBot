@@ -8,7 +8,7 @@ from keyboards import cars_in_stock_keyboard
 from utils.states import *
 from aiogram.fsm.context import FSMContext
 from keyboards.start_keyboard import *
-
+from keyboards.cars_in_stock_keyboard import *
 router = Router()
 
 @router.message(F.text.lower() == 'авто в наявності')
@@ -85,16 +85,17 @@ async def handle_data_to_sql(message: Message ,state: FSMContext,bot:Bot):
 
 
 async def send_car_items(message: Message ,state: FSMContext,rows,bot:Bot):
+    logging.info('send_car_items')
     for row in rows:
         path_to_photo = row[1]
         logging.info(path_to_photo)
         photo = FSInputFile(f"{path_to_photo}")
-
         year = row[2]
         price = row[3]
         car_name = row[4]
         car_description = row[5]
-        await bot.send_photo(chat_id=message.chat.id ,photo=photo,caption=f"{car_name}\n"
+        short_info_for_manager = f'{str(car_name)},{str(price)}$,{str(year)}р'
+        await bot.send_photo(chat_id=message.chat.id ,photo=photo,reply_markup=car_ikb(short_info_for_manager),caption=f"{car_name}\n"
                                                                           f"Рік {year}р \n"
                                                                           f"Ціна {price}$\n"
                                                                           f"Опис {car_description}")

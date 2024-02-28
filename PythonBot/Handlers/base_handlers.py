@@ -2,6 +2,7 @@ import logging
 
 import sqlite3
 from aiogram.filters import CommandStart
+from Handlers.callback_user_chose_car import CallbackDataHolder
 from aiogram.types import Message, InputFile, FSInputFile
 from aiogram import Bot, Dispatcher, F, Router
 from keyboards import start_keyboard
@@ -42,8 +43,16 @@ async def connect_to_manager(message: Message,state:FSMContext):
                     (client_id,client_name,car_to_find,client_phone,time)
                     VALUES (?, ?, ?,?,?)
                     """)
-            values = (dict_user_info['user_id'], dict_user_info['user_name'], 'Звяжіться зі мною', dict_user_info['phone_number'],
-                      dict_user_info['time'])
+            await state.update_data(contact_with_manager = message.text)
+            dict_data = await state.get_data()
+            if CallbackDataHolder.get_callback_data() is not None:
+                values = (dict_user_info['user_id'], dict_user_info['user_name'], CallbackDataHolder.get_callback_data(),
+                          dict_user_info['phone_number'],
+                          dict_user_info['time'])
+                CallbackDataHolder.clear_callback_data()
+            else:
+              values = (dict_user_info['user_id'], dict_user_info['user_name'], 'Звяжіться зі мною', dict_user_info['phone_number'],
+                          dict_user_info['time'])
             cur.execute(query, values)
             db.commit()
     except Exception as ex:
