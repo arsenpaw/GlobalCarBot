@@ -39,10 +39,11 @@ async def get_aplies(message: types.Message, bot: Bot):
         cur.execute(query)
         rows = cur.fetchall()
         logging.info(f"SQL RESPONCE {rows}")
-        if len(rows) > MESSAGE_OVERLOAD:
+        if len(rows) == 0:
+            await message.answer(f'Всі заявк обробені!.')
+        elif len(rows) > MESSAGE_OVERLOAD:
             rows = rows[:MESSAGE_OVERLOAD]
             await message.answer(f'Дуже багато заявок, обрібіть спочатку найстаріші')
-
         for person in rows:
             id = person[0]
             name = person[2]
@@ -52,18 +53,33 @@ async def get_aplies(message: types.Message, bot: Bot):
             await message.answer(f'Імя: {name}\n'
                            f'Номер телефону  {phone_number}\n'
                            f'Запит: {request}\n'
-                            f'Статус: Не оброблено', reply_markup=admin_message_ikb(id))
+                            f'Статус: ❌Не оброблено❌', reply_markup=admin_message_ikb(id))
 
-async def insert_newline_every_second_word(words:list):
-    result = str()
-    for i, word in enumerate(words):
-        result += word
-        if (i + 1) % 2 == 0:  # Check if it's the second word
-            result += "\n"
-        else:
-            result += " "
+async def replace_last_two_words(input_string, new_words):
+    # Split the input string into words
+    lines = input_string.split('\n')
+
+    # Extract the last line
+    last_line = lines.pop()
+
+    # Remove the last two words from the last line
+    words = last_line.split()
+    removed_words = words[-2:]
+    words = words[:-2]
+
+    # Add your own text to the list of words
+    words.extend(new_words.split())
+
+    # Construct the new last line
+    new_last_line = ' '.join(words)
+
+    # Append the new last line back to the lines list
+    lines.append(new_last_line)
+
+    # Reconstruct the string with preserved formatting
+    result = '\n'.join(lines)
+
     return result
-
 @admin_group_router.callback_query(AdminSelectCallback.filter(F.foo == "selected_item"))
 async def callback_query(callback_query: CallbackQuery,callback_data: UserInfoCallback,bot :Bot):
     logging.info('callback_query_admin_group')
@@ -80,14 +96,8 @@ async def callback_query(callback_query: CallbackQuery,callback_data: UserInfoCa
         cur.execute(query, (Status.HANDLED.value, selected_id))
     if cur.rowcount > 0:
         logging.info("Status updated successfully.")
-        print(callback_query.message.text)
-        #HGERE
-        print(callback_query.from_user.full_name)
-        list_msg = callback_query.message.text.split()
-        list_msg[-2] = f'{callback_query.from_user.full_name},'
-        final_msg = await insert_newline_every_second_word(list_msg)
-        print(final_msg)
-
+        logging.info(callback_query.message.text)
+        final_msg = await replace_last_two_words(callback_query.message.text,f'✅{callback_query.from_user.full_name}, обробленно✅' )
         await callback_query.message.edit_text(final_msg)
 
     else:
