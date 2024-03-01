@@ -1,5 +1,9 @@
 from aiogram.fsm.state import State, StatesGroup
+from enum import Enum
 
+class Status(Enum):
+    HANDLED = 'handled'
+    UNHANDLED = 'unhandled'
 class BotStates(StatesGroup):
     user_car_info = State()
     contact_to_user_about_info = State()

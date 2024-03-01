@@ -4,11 +4,13 @@ from aiogram import F, Bot, types, Router
 from aiogram.filters import Command
 import sqlite3
 from  admin.admin_kb import *
-
+from utils.callback_data import *
 from filters.admin_filters import *
 admin_group_router = Router()
 admin_group_router.message.filter(ChatTypeFilter(["group", "supergroup"]))
 admin_group_router.edited_message.filter(ChatTypeFilter(["group", "supergroup"]))
+from database.database_methods import *
+from utils.states import Status
 
 MESSAGE_OVERLOAD: int = 10
 @admin_group_router.message(Command("admin"))
@@ -52,11 +54,32 @@ async def get_aplies(message: types.Message, bot: Bot):
                            f'Запит: {request}\n'
                             f'Статус: Не оброблено', reply_markup=admin_message_ikb(id))
 
-@admin_group_router.callback_query()
-async def callback_query(callback_query: types.CallbackQuery):
+@admin_group_router.callback_query(AdminSelectCallback.filter(F.foo == "selected_item"))
+async def callback_query(callback_query: CallbackQuery,callback_data: UserInfoCallback):
     logging.info('callback_query_admin_group')
-    callback_data = callback_query.data
-    logging.info(f'CALL BACK {callback_data}')
+    selected_id = callback_data.id_selected
+    logging.info(selected_id)
+    with sqlite3.connect("database/clients.db") as db:
+        cur = db.cursor()
+        query = """
+            UPDATE CertainCar
+            SET status = ?
+            WHERE id = ?
+        """
+
+        cur.execute(query, (Status.HANDLED.value, selected_id))
+    if cur.rowcount > 0:
+        logging.info("Status updated successfully.")
+        print(callback_query)
+        #HGERE
+        await callback_query.message.edit_text(f"Виконано {callback_query.from_user.full_name}")
+    else:
+        logging.error(
+            "No rows were updated. The specified ID might not exist or the status is already set to the desired value.")
+        await callback_query.message.answer('ЙОЙОЙОЙ помилка при введені в БД')
+
+
+
 
 
 
