@@ -1,10 +1,14 @@
 import logging
 import asyncio
+
+import admin.admin_in_group_handler
+
 from config_reader import config
 from aiogram import Bot, Dispatcher
 from Handlers import  *
 from Handlers import carfax_get_handlers
 from Handlers import car_to_find_handlers
+from admin import admin_methods,admin_in_group_handler
 from aiogram.client.session.aiohttp import AiohttpSession
 
 
@@ -23,7 +27,7 @@ async def main():
     logging.info(f'Server is: {bot.session.api.base}')
     dp = Dispatcher(bot=bot)
     dp.include_routers(base_handlers.router, estimated_cost_handlers.router, cars_in_stock_handlers.router,callback_user_chose_car.router,
-                       carfax_get_handlers.router, car_to_find_handlers.router)
+                       carfax_get_handlers.router, car_to_find_handlers.router,admin_in_group_handler.admin_group_router)
 
     await dp.start_polling(bot, skip_updates=True)
 
