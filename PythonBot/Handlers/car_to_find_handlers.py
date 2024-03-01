@@ -7,8 +7,11 @@ from aiogram.fsm.context import FSMContext
 from utils.states import *
 
 
-router = Router()
+from filters.admin_filters import *
 
+
+router = Router()
+router.message.filter(ChatTypeFilter(["private"]))
 @router.message(F.text.lower() == 'авто на підбір')
 async def cars_cost_to_find(message: Message, state: FSMContext):
     logging.info("cars to find info button")

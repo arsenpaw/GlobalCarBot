@@ -8,7 +8,11 @@ from aiogram.fsm.context import FSMContext
 from utils.states import *
 from keyboards.start_keyboard import *
 
+from filters.admin_filters import *
+
+
 router = Router()
+router.message.filter(ChatTypeFilter(["private"]))
 
 
 class CallbackDataHolder:

@@ -10,7 +10,11 @@ from aiogram.fsm.context import FSMContext
 from database.database_methods import *
 from methods.user_filter_to_db import *
 
+from filters.admin_filters import *
+
+
 router = Router()
+router.message.filter(ChatTypeFilter(["private"]))
 
 
 @router.message(CommandStart())

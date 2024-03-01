@@ -11,10 +11,11 @@ from aiogram.fsm.context import FSMContext
 from utils.states import *
 from database.database_methods import *
 from  methods.user_filter_to_db import *
+from filters.admin_filters import *
 
 
 router = Router()
-
+router.message.filter(ChatTypeFilter(["private"]))
 @router.message(F.text.lower() == 'вартість під ключ')
 async def estimated_cost_handler(message: Message,state:FSMContext) -> None:
     logging.info("/estimated cose")

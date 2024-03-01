@@ -9,7 +9,11 @@ from utils.states import *
 from aiogram.fsm.context import FSMContext
 from keyboards.start_keyboard import *
 from keyboards.cars_in_stock_keyboard import *
+from filters.admin_filters import *
+
+
 router = Router()
+router.message.filter(ChatTypeFilter(["private"]))
 
 @router.message(F.text.lower() == 'авто в наявності')
 async def cars_cost_in_stock(message: Message, state: FSMContext):
