@@ -19,7 +19,7 @@ async def command_start_handler(message: Message) -> None:
     await message.answer(f"<b>Привіт {message.from_user.full_name} !</b>\n Ми ітд ітп/help",
                          reply_markup=start_keyboard.start_kb)
 
-
+@router.message(BotStates.main_menu)
 @router.message(F.text.lower() == 'головне меню')
 async def back_to_menu(message: Message,state:FSMContext):
     await state.clear()
@@ -49,7 +49,7 @@ async def connect_to_manager(message: Message,state:FSMContext):
                 values = (dict_user_info['user_id'], dict_user_info['user_name'], CallbackDataHolder.get_callback_data(),
                           dict_user_info['phone_number'],
                           dict_user_info['time'])
-                CallbackDataHolder.clear_callback_data()
+
             else:
               values = (dict_user_info['user_id'], dict_user_info['user_name'], 'Звяжіться зі мною', dict_user_info['phone_number'],
                           dict_user_info['time'])
@@ -58,7 +58,7 @@ async def connect_to_manager(message: Message,state:FSMContext):
     except Exception as ex:
         logging.error(f'ERROR IN FIRST BUTTON  DB, {ex}')
     finally:
+        CallbackDataHolder.clear_callback_data()
         result = await is_object_added(cur)
         await send_status_to_user(message, result)
-        await message.answer(text='Верніться в головне меню', reply_markup = start_keyboard.back_bome_kb)
-
+        await message.answer("Верніться в головне меню", reply_markup=start_keyboard.back_bome_kb)

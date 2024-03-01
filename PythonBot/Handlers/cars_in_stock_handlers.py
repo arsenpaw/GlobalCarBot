@@ -75,7 +75,8 @@ async def handle_data_to_sql(message: Message ,state: FSMContext,bot:Bot):
             rows = cur.fetchall()
             logging.info(f"SQL RESPONCE {rows}")
             if len(rows) == 0:
-                await message.answer('Поки що у нас немає таких автомобілів в наявості, але ми обовязково привизем їх на замовлення.', reply_markup=consult_and_main_kb)
+                await state.set_state(BotStates.contact_with_manager)
+                await message.answer('Поки  що у нас немає таких автомобілів в наявості, але ми обовязково привизем їх на замовлення.', reply_markup=consult_and_main_kb)
             else:
                 await send_car_items(message,state,rows,bot)
 

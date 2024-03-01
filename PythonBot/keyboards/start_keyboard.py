@@ -39,7 +39,7 @@ back_bome_kb= ReplyKeyboardMarkup(
          KeyboardButton(text='Головне меню')
         ]
     ],
-    resize_keyboard=True,
+    resize_keyboard=False,
     one_time_keyboard=True
 )
 

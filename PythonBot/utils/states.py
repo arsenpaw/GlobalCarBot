@@ -14,3 +14,4 @@ class BotStates(StatesGroup):
     contact_with_manager = State() #to base handlers
     send_vin_to_manager = State()
     callback_state = State()
+    main_menu = State()
