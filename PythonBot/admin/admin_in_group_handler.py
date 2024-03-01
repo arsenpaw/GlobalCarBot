@@ -16,6 +16,7 @@ MESSAGE_OVERLOAD: int = 10
 @admin_group_router.message(Command("admin"))
 async def get_admins(message: types.Message, bot: Bot):
     chat_id = message.chat.id
+    print(chat_id)
     admins_list = await bot.get_chat_administrators(chat_id)
     admins_list = [
         member.user.id
@@ -25,10 +26,11 @@ async def get_admins(message: types.Message, bot: Bot):
     bot.my_admins_list = admins_list
     if message.from_user.id in admins_list:
         await message.delete()
+        await message.answer('✅Синхронізація пройшла успішно✅')
     logging.info( bot.my_admins_list)
 
 @admin_group_router.message(Command("update"))
-async def get_aplies(message: types.Message, bot: Bot):
+async def get_aplies(message: types.Message, bot:Bot):
     logging.info('send_aplies_to_admin')
 
     with sqlite3.connect("database/clients.db") as db:
@@ -40,10 +42,10 @@ async def get_aplies(message: types.Message, bot: Bot):
         rows = cur.fetchall()
         logging.info(f"SQL RESPONCE {rows}")
         if len(rows) == 0:
-            await message.answer(f'Всі заявк обробені!.')
+            await message.answer(f'Всі заявк оброблені 🎉.')
         elif len(rows) > MESSAGE_OVERLOAD:
             rows = rows[:MESSAGE_OVERLOAD]
-            await message.answer(f'Дуже багато заявок, обрібіть спочатку найстаріші')
+            await message.answer(f'⚠️Увага!⚠️\n Дуже багато заявок, обробіть спочатку найстаріші')
         for person in rows:
             id = person[0]
             name = person[2]

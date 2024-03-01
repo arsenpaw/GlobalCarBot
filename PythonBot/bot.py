@@ -1,7 +1,7 @@
 import logging
 import asyncio
 
-import admin.admin_in_group_handler
+
 
 from config_reader import config
 from aiogram import Bot, Dispatcher
