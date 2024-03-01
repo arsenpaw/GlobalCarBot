@@ -5,10 +5,11 @@ from aiogram.types import (
     KeyboardButton
 )
 from  aiogram.utils.keyboard import ReplyKeyboardBuilder, InlineKeyboardBuilder
+from utils.callback_data import *
 def car_ikb(short_info:str):
     builder = InlineKeyboardBuilder()
 
-    builder.button(text='Докладніше',callback_data=short_info)
+    builder.button(text='Докладніше',callback_data=UserInfoCallback(foo = "user_info", user_info = short_info))
     return builder.as_markup(resize_keyboard=True)
 
 cars_cost_in_stock_kb = ReplyKeyboardMarkup(
