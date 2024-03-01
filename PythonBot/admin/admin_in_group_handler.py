@@ -54,8 +54,18 @@ async def get_aplies(message: types.Message, bot: Bot):
                            f'Запит: {request}\n'
                             f'Статус: Не оброблено', reply_markup=admin_message_ikb(id))
 
+async def insert_newline_every_second_word(words:list):
+    result = str()
+    for i, word in enumerate(words):
+        result += word
+        if (i + 1) % 2 == 0:  # Check if it's the second word
+            result += "\n"
+        else:
+            result += " "
+    return result
+
 @admin_group_router.callback_query(AdminSelectCallback.filter(F.foo == "selected_item"))
-async def callback_query(callback_query: CallbackQuery,callback_data: UserInfoCallback):
+async def callback_query(callback_query: CallbackQuery,callback_data: UserInfoCallback,bot :Bot):
     logging.info('callback_query_admin_group')
     selected_id = callback_data.id_selected
     logging.info(selected_id)
@@ -70,9 +80,16 @@ async def callback_query(callback_query: CallbackQuery,callback_data: UserInfoCa
         cur.execute(query, (Status.HANDLED.value, selected_id))
     if cur.rowcount > 0:
         logging.info("Status updated successfully.")
-        print(callback_query)
+        print(callback_query.message.text)
         #HGERE
-        await callback_query.message.edit_text(f"Виконано {callback_query.from_user.full_name}")
+        print(callback_query.from_user.full_name)
+        list_msg = callback_query.message.text.split()
+        list_msg[-2] = f'{callback_query.from_user.full_name},'
+        final_msg = await insert_newline_every_second_word(list_msg)
+        print(final_msg)
+
+        await callback_query.message.edit_text(final_msg)
+
     else:
         logging.error(
             "No rows were updated. The specified ID might not exist or the status is already set to the desired value.")
