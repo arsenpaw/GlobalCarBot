@@ -3,3 +3,5 @@
 *.db
 clients.db
 clients
+PythonBot/database/clients.db
+*.db

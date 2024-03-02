@@ -21,9 +21,7 @@ async def main():
                         level=logging.INFO)
     logging.info('Program Started !!!')
     bot = Bot(config.bot_token.get_secret_value(), parse_mode='HTML')
-    #TEMPORARY
     bot.my_admins_list = []
-    #/TEMPORARY
     logging.info(f'Server is: {bot.session.api.base}')
     dp = Dispatcher(bot=bot)
     dp.include_routers(base_handlers.router, estimated_cost_handlers.router, cars_in_stock_handlers.router,callback_user_chose_car.router,
