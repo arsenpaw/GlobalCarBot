@@ -1,13 +1,13 @@
 import logging
-
+import sqlite3
 from aiogram.types import Message, InputFile, FSInputFile
 from aiogram import Bot, Dispatcher, F, Router
 from keyboards import car_to_find_keyboard
 from aiogram.fsm.context import FSMContext
+from methods import user_filter_to_db
 from utils.states import *
-
-
 from filters.admin_filters import *
+from methods.user_filter_to_db import *
 
 
 router = Router()
@@ -29,11 +29,38 @@ async def cars_year_to_find(message: Message ,state: FSMContext):
 async def cars_year_to_find(message: Message ,state: FSMContext):
     logging.info("get info for car in stock button")
     await state.update_data(car_to_find_year_select = message.text)
-    user_data_dict = await state.get_data()
-    values_string = ', '.join(user_data_dict.values())
-    await message.answer('Автомобіль яких років випуску ви розглядаєте?', reply_markup=car_to_find_keyboard.send_contact_car_to_find)
+    await state.set_state(BotStates.contact_with_manager_to_find_car)
+    await message.answer('Вибір збережено', reply_markup=car_to_find_keyboard.send_contact_car_to_find)
+    await message.answer('Надішліть свій контакт для звязку з менеджером', reply_markup=car_to_find_keyboard.send_contact_car_to_find)
     
-
-
-  
+@router.message(BotStates.contact_with_manager_to_find_car)
+async def contact_to_manager_to_find_car(message: Message,state:FSMContext) -> None:
+    logging.info('after_data_provided')
+    try:
+        user_data_dict = await state.get_data()
+        car = ', '.join(user_data_dict.values())
+        logging.info(f'Selected car {car}')
+        dict_user_info = await user_filter_to_db.get_basic_info(message)
+    except Exception as ex:
+        logging.error(f'ERROR IN PARSING 1 BUTTON, {ex}')
+    try:
+        with sqlite3.connect("database/clients.db") as db:
+            cur = db.cursor()
+            query = (""" INSERT INTO CertainCar
+                    (client_id,
+                    client_name,
+                    car_to_find,
+                    client_phone,
+                    time)
+                    VALUES (?, ?, ?,?,?)
+                    """)
+            values = (dict_user_info['user_id'],dict_user_info['user_name'], car,dict_user_info['phone_number'],dict_user_info['time'])
+            cur.execute(query, values)
+            db.commit()
+    except Exception as ex:
+        logging.error(f'ERROR IN FIRST BUTTON  DB, {ex}')
+    finally:
+        result = await is_object_added(cur)
+        await send_status_to_user(message,result)
+        await message.answer(text='Верніться в головне меню', reply_markup=start_keyboard.back_bome_kb)
 

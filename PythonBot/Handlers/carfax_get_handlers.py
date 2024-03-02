@@ -53,7 +53,11 @@ async def handle_msg_to_manger(message:Message,state: FSMContext):
         with sqlite3.connect("database/clients.db") as db:
             cur = db.cursor()
             query = (""" INSERT INTO CertainCar
-                (client_id,client_name,car_to_find,client_phone,time)
+                (client_id,
+                client_name,
+                car_to_find,
+                client_phone,
+                time)
                 VALUES (?, ?, ?,?,?)
                 """)
             values = (
