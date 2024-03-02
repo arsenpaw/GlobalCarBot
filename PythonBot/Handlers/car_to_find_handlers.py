@@ -21,7 +21,7 @@ async def cars_cost_to_find(message: Message, state: FSMContext):
 @router.message(BotStates.car_to_find_get_price)
 async def cars_year_to_find(message: Message ,state: FSMContext):
     await state.update_data(car_to_find_price_select = message.text)
-    await state.set_state(BotStates.year_selection)
+    await state.set_state(BotStates.car_to_find_get_year)
     logging.info("Year in stock button")
     await message.answer('Автомобіль яких років випуску ви розглядаєте?', reply_markup=car_to_find_keyboard.cars_to_find_year_kb)
     
@@ -47,13 +47,9 @@ async def contact_to_manager_to_find_car(message: Message,state:FSMContext) -> N
         with sqlite3.connect("database/clients.db") as db:
             cur = db.cursor()
             query = (""" INSERT INTO CertainCar
-                    (client_id,
-                    client_name,
-                    car_to_find,
-                    client_phone,
-                    time)
-                    VALUES (?, ?, ?,?,?)
-                    """)
+                (client_id,client_name,car_to_find,client_phone,time)
+                VALUES (?, ?, ?,?,?)
+                """)
             values = (dict_user_info['user_id'],dict_user_info['user_name'], car,dict_user_info['phone_number'],dict_user_info['time'])
             cur.execute(query, values)
             db.commit()
