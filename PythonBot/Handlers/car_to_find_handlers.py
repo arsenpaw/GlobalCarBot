@@ -37,12 +37,20 @@ async def cars_year_to_find(message: Message ,state: FSMContext):
 async def contact_to_manager_to_find_car(message: Message,state:FSMContext) -> None:
     logging.info('after_data_provided')
     try:
+
         user_data_dict = await state.get_data()
         car = ','.join(user_data_dict.values())
         car = f'Авто на підбір: {car}'
         dict_user_info = await user_filter_to_db.get_basic_info(message)
     except Exception as ex:
         logging.error(f'ERROR IN PARSING CAR_TO_FIND BUTTON, {ex}')
+
+        dict_user_info = await get_basic_info(message)
+        car = ', '.join(dict_user_info.values())
+        dict_user_info = await user_filter_to_db.get_basic_info(message)
+    except Exception as ex:
+        logging.error(f'ERROR IN PARSING 2 BUTTON, {ex}')
+
     try:
         with sqlite3.connect("database/clients.db") as db:
             cur = db.cursor()
@@ -50,7 +58,7 @@ async def contact_to_manager_to_find_car(message: Message,state:FSMContext) -> N
                 (client_id,client_name,car_to_find,client_phone,time)
                 VALUES (?, ?, ?,?,?)
                 """)
-            values = (dict_user_info['user_id'],dict_user_info['user_name'], car,dict_user_info['phone_number'],dict_user_info['time'])
+            values = (dict_user_info['user_id'],dict_user_info['user_name'], car, dict_user_info['phone_number'],dict_user_info['time'])
             cur.execute(query, values)
             db.commit()
     except Exception as ex:
