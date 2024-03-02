@@ -10,6 +10,8 @@ async def get_basic_info(message: Message)-> dict:
     user_info_dict = message.contact
     message_date = str(message.date)
     client_phone = user_info_dict.phone_number
+    if '+' not in client_phone:
+        client_phone = f'+{client_phone}'
     if user_info_dict.last_name is None:
         full_name = str(user_info_dict.first_name)
     else:
