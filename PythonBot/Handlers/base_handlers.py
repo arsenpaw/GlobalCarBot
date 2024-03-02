@@ -32,7 +32,7 @@ async def command_start_handler(message: Message) -> None:
 async def back_to_menu(message: Message,state:FSMContext):
     await state.clear()
     logging.info("/main menu command")
-    await message.answer('Ви в головному меню, виберіть послугу.', reply_markup=start_keyboard.start_kb)
+    await message.answer('⬇️Ви в головному меню, виберіть послугу.⬇️', reply_markup=start_keyboard.start_kb)
 
 @router.message(BotStates.contact_with_manager)
 @router.message(F.text.lower() == 'звязок з менеджером')
