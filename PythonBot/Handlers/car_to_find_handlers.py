@@ -2,7 +2,7 @@ import logging
 import sqlite3
 from aiogram.types import Message, InputFile, FSInputFile
 from aiogram import Bot, Dispatcher, F, Router
-from keyboards import car_to_find_keyboard
+from keyboards import car_to_find_keyboard,start_keyboard
 from aiogram.fsm.context import FSMContext
 from methods import user_filter_to_db
 from utils.states import *
@@ -30,7 +30,7 @@ async def cars_year_to_find(message: Message ,state: FSMContext):
     logging.info("get info for car in stock button")
     await state.update_data(car_to_find_year_select = message.text)
     await state.set_state(BotStates.car_to_find_sent_contact)
-    await message.answer('Щоб отримати детальнішу інформацію, натисніть Отримати інформацію', reply_markup=car_to_find_keyboard.send_contact_car_to_find)
+    await message.answer('Щоб отримати детальнішу інформацію, натисніть Отримати детальнішу інформацію', reply_markup=start_keyboard.detail_info_and_main_kb)
 
         
 @router.message(BotStates.car_to_find_sent_contact)

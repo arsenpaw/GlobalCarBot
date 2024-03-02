@@ -44,7 +44,7 @@ cars_to_find_year_kb = ReplyKeyboardMarkup(
 send_contact_car_to_find = ReplyKeyboardMarkup(
     keyboard=[
         [
-         KeyboardButton(text='Отримати інформацію', request_contact = True),
+         KeyboardButton(text='Звязатись з менеджером', request_contact = True),
         ],
         [
          KeyboardButton(text='Головне меню')

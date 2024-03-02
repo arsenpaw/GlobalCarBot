@@ -38,4 +38,4 @@ async def callback_query(callback_query: CallbackQuery,callback_data: UserInfoCa
     logging.info(f'CALL BACK {callback_data}')
     CallbackDataHolder.set_callback_data(f'З магазину GlobalCar: {callback_data}')
     await state.set_state(BotStates.contact_with_manager)
-    await callback_query.message.answer('Класний вибір, натисніть Звязатись з менеджером та отримайте докладнішу інформацію', reply_markup=consult_and_main_kb)
+    await callback_query.message.answer('Класний вибір, натисніть Отримати інформацію і ви дізнаєтесь ще більше про це авто.', reply_markup=detail_info_and_main_kb)

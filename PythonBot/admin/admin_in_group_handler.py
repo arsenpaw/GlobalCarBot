@@ -42,7 +42,7 @@ async def get_aplies(message: types.Message, bot:Bot):
         rows = cur.fetchall()
         logging.info(f"SQL RESPONCE {rows}")
         if len(rows) == 0:
-            await message.answer(f'Всі заявк оброблені 🎉.')
+            await message.answer(f'Всі заявки оброблені 🎉.')
         elif len(rows) > MESSAGE_OVERLOAD:
             rows = rows[:MESSAGE_OVERLOAD]
             await message.answer(f'⚠️Увага!⚠️\n Дуже багато заявок, обробіть спочатку найстаріші')

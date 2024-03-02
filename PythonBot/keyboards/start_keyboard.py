@@ -32,6 +32,18 @@ consult_and_main_kb= ReplyKeyboardMarkup(
     resize_keyboard=True,
     one_time_keyboard=True
 )
+detail_info_and_main_kb= ReplyKeyboardMarkup(
+    keyboard=[
+        [
+         KeyboardButton(text='Отримати детальну інформацію', request_contact=True),
+        ],
+        [
+         KeyboardButton(text='Головне меню')
+        ]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=True
+)
 
 back_bome_kb= ReplyKeyboardMarkup(
     keyboard=[
@@ -39,7 +51,7 @@ back_bome_kb= ReplyKeyboardMarkup(
          KeyboardButton(text='Головне меню')
         ]
     ],
-    resize_keyboard=False,
+    resize_keyboard=True,
     one_time_keyboard=True
 )
 

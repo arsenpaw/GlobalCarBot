@@ -38,7 +38,7 @@ async def handle_vin_user_input(message:Message,state: FSMContext):
         await message.answer('Щоб підтвердити отримання, натисніть "Підтвердити отримання CarFax" ', reply_markup=carfax_keyboard.aproove_carfax_keyboard)
     else:
         await state.set_state(BotStates.carfax_get_info)
-        await message.answer('Ви ввели некоректний VIN, aбо некоректне посилання перевірте правильність інформації')
+        await message.answer('Ви ввели некоректний VIN aбо некоректне посилання.\nВведіть інформацію ще раз',reply_markup=start_keyboard.back_bome_kb)
 @router.message(BotStates.send_vin_to_manager)
 async def handle_msg_to_manger(message:Message,state: FSMContext):
     logging.info('handle_vin_user_input')
