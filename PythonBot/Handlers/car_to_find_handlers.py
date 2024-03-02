@@ -29,17 +29,17 @@ async def cars_year_to_find(message: Message ,state: FSMContext):
 async def cars_year_to_find(message: Message ,state: FSMContext):
     logging.info("get info for car in stock button")
     await state.update_data(car_to_find_year_select = message.text)
-    await state.set_state(BotStates.contact_with_manager_to_find_car)
+    await state.set_state(BotStates.send_contact)
     await message.answer('Вибір збережено', reply_markup=car_to_find_keyboard.send_contact_car_to_find)
     await message.answer('Надішліть свій контакт для звязку з менеджером', reply_markup=car_to_find_keyboard.send_contact_car_to_find)
-    
-@router.message(BotStates.contact_with_manager_to_find_car)
+
+        
+@router.message(BotStates.send_contact)
 async def contact_to_manager_to_find_car(message: Message,state:FSMContext) -> None:
     logging.info('after_data_provided')
     try:
         user_data_dict = await state.get_data()
         car = ', '.join(user_data_dict.values())
-        logging.info(f'Selected car {car}')
         dict_user_info = await user_filter_to_db.get_basic_info(message)
     except Exception as ex:
         logging.error(f'ERROR IN PARSING 1 BUTTON, {ex}')
