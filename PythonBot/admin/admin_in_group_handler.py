@@ -16,7 +16,7 @@ MESSAGE_OVERLOAD: int = 10
 @admin_group_router.message(Command("admin"))
 async def get_admins(message: types.Message, bot: Bot):
     chat_id = message.chat.id
-    print(chat_id)
+
     admins_list = await bot.get_chat_administrators(chat_id)
     admins_list = [
         member.user.id
@@ -24,10 +24,15 @@ async def get_admins(message: types.Message, bot: Bot):
         if member.status == "creator" or member.status == "administrator"
     ]
     bot.my_admins_list = admins_list
-    if message.from_user.id in admins_list:
+    logging.info(f'ADMINS{admins_list}')
+    bot.chat_to_send = chat_id
+    logging.info(f'CHAT ID: {bot.chat_to_send}')
+    if message.from_user.id in admins_list and chat_id == bot.chat_to_send :
         await message.delete()
         await message.answer('✅Синхронізація пройшла успішно✅')
     logging.info( bot.my_admins_list)
+
+
 
 @admin_group_router.message(Command("update"))
 async def get_aplies(message: types.Message, bot:Bot):
