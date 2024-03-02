@@ -16,6 +16,7 @@ class BotStates(StatesGroup):
     car_to_find_get_year = State()
     car_to_find_get_user_contact = State()
     contact_with_manager_to_find_car = State()
+    car_to_find_sent_contact = State()
     #to base handlers
     contact_with_manager = State() 
     send_vin_to_manager = State()
