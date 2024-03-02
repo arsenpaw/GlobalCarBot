@@ -1,5 +1,5 @@
 import logging
-import sqlite3
+
 from aiogram.types import Message, InputFile, FSInputFile
 from aiogram import Bot, Dispatcher, F, Router
 from keyboards import car_to_find_keyboard
@@ -21,23 +21,19 @@ async def cars_cost_to_find(message: Message, state: FSMContext):
 @router.message(BotStates.car_to_find_get_price)
 async def cars_year_to_find(message: Message ,state: FSMContext):
     await state.update_data(car_to_find_price_select = message.text)
-    await state.set_state(BotStates.car_to_find_get_year)
+    await state.set_state(BotStates.year_selection)
     logging.info("Year in stock button")
     await message.answer('Автомобіль яких років випуску ви розглядаєте?', reply_markup=car_to_find_keyboard.cars_to_find_year_kb)
     
-
 @router.message(BotStates.car_to_find_get_year)
 async def cars_year_to_find(message: Message ,state: FSMContext):
     logging.info("get info for car in stock button")
     await state.update_data(car_to_find_year_select = message.text)
     user_data_dict = await state.get_data()
     values_string = ', '.join(user_data_dict.values())
-    print(values_string)
-
     await message.answer('Автомобіль яких років випуску ви розглядаєте?', reply_markup=car_to_find_keyboard.send_contact_car_to_find)
     
 
+
   
-
-
 
