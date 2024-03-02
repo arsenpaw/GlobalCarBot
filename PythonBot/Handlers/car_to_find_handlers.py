@@ -46,8 +46,8 @@ async def contact_to_manager_to_find_car(message: Message,state:FSMContext) -> N
         logging.error(f'ERROR IN PARSING CAR_TO_FIND BUTTON, {ex}')
 
         dict_user_info = await get_basic_info(message)
-        car = ', '.join(dict_user_info.values())
-        dict_user_info = await user_filter_to_db.get_basic_info(message)
+        dict_car = await state.get_data()
+        car = ', '.join(dict_car.values())
     except Exception as ex:
         logging.error(f'ERROR IN PARSING 2 BUTTON, {ex}')
 
