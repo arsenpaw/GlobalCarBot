@@ -17,7 +17,7 @@ admin_group_router.edited_message.filter(ChatTypeFilter(["group", "supergroup"])
 
 
 @admin_group_router.message(Command("admin"))
-async def get_admins(message: types.Message, bot: Bot):
+async def set_admins(message: types.Message, bot: Bot):
     chat_id = message.chat.id
     admins_list = await bot.get_chat_administrators(chat_id)
     admins_list = [

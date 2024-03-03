@@ -61,12 +61,32 @@ async def get_from_txt() -> int:
         return chat_id
 
 
+async def auto_set_admins(bot: Bot):
+    chat_id = await get_from_txt()
+    if chat_id == 0:
+        logging.info('CHAT ID IS EMNPTY WHILE TRY TO UPPDATE CHAT ADMINS')
+        return
+    try:
+        admins_list = await bot.get_chat_administrators(chat_id)
+        admins_list = [
+            member.user.id
+            for member in admins_list
+            if member.status == "creator" or member.status == "administrator"
+        ]
+        bot.my_admins_list = admins_list
+        logging.info(f'ADMINS{admins_list}')
+        bot.chat_to_send = chat_id
+        logging.info(f'CHAT ID: {bot.chat_to_send}')
+        logging.info(f'UPDATED AUTO ADMIN LIST {bot.my_admins_list}')
+    except Exception as ex:
+        logging.error(f'SET ADMIN AUTO EX {ex}')
 async def auto_request_to_db(bot: Bot):
     logging.info('send_AUTO_aplies_to_admin')
     cur_chat_id = await get_from_txt()
     if cur_chat_id == 0:
         logging.info('AUTORN DIDNT WORK, need command /autorun to activate')
         return
+    await auto_set_admins(bot)
     with sqlite3.connect("database/clients.db") as db:
         cur = db.cursor()
         query = (""" SELECT * FROM CertainCar WHERE status = 'unhandled' AND id > ?;
@@ -94,3 +114,4 @@ async def auto_request_to_db(bot: Bot):
                                                              f'Запит: {request}\n'
                                                              f'Статус: ❌Не оброблено❌',
                                    reply_markup=admin_message_ikb(id))
+

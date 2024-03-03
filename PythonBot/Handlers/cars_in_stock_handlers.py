@@ -119,3 +119,5 @@ async def send_car_items(message: Message, state: FSMContext, rows, bot: Bot):
                                          f"Рік {year}р \n"
                                          f"Ціна {price}$\n"
                                          f"Опис {car_description}")
+
+    await message.answer('⬆️Виберіть авто яке вас зацікавило.⬆️',reply_markup=back_bome_kb)
