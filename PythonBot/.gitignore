@@ -14,5 +14,3 @@ log
 __pycache__
 .DS_store
 DS_store
-clients
-clients.db
