@@ -25,3 +25,11 @@ class BotStates(StatesGroup):
     send_vin_to_manager = State()
     callback_state = State()
     main_menu = State()
+    #admin states
+    add_car = State()
+    add_car_name = State()
+    add_car_photo = State()
+    add_car_price = State()
+    add_car_year = State()
+    add_car_desctiption = State()
+    admin_sent_to_db = State()

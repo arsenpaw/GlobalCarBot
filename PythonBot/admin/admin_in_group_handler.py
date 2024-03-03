@@ -71,13 +71,13 @@ async def get_aplies(message: types.Message):
             request = person[3]
             phone_number = person[4]
             await message.answer(f'Імя: {name}\n'
-                           f'Номер телефону  {phone_number}\n'
-                           f'Запит: {request}\n'
-                            f'Статус: ❌Не оброблено❌', reply_markup=admin_message_ikb(id))
+                                 f'Номер телефону  {phone_number}\n'
+                                 f'Запит: {request}\n'
+                                 f'Статус: ❌Не оброблено❌', reply_markup=admin_message_ikb(id))
 
 
 @admin_group_router.callback_query(AdminSelectCallback.filter(F.foo == "selected_item"))
-async def callback_query(callback_query: CallbackQuery,callback_data: UserInfoCallback):
+async def callback_query(callback_query: CallbackQuery, callback_data: UserInfoCallback):
     logging.info('callback_query_admin_group')
     selected_id = callback_data.id_selected
     logging.info(selected_id)
@@ -93,8 +93,8 @@ async def callback_query(callback_query: CallbackQuery,callback_data: UserInfoCa
     if cur.rowcount > 0:
         logging.info("Status updated successfully.")
         logging.info(callback_query.message.text)
-        final_msg = await replace_last_two_words(callback_query.message.text,f'✅{callback_query.from_user.full_name}'
-                                                                             f', обробленно✅')
+        final_msg = await replace_last_two_words(callback_query.message.text, f'✅{callback_query.from_user.full_name}'
+                                                                              f', обробленно✅')
         await callback_query.message.edit_text(final_msg)
 
     else:
