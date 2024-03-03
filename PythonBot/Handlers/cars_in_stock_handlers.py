@@ -1,7 +1,6 @@
 import logging
 import sqlite3
 
-
 from aiogram.types import Message, InputFile, FSInputFile
 from aiogram import Bot, Dispatcher, F, Router
 from keyboards import cars_in_stock_keyboard
@@ -11,36 +10,40 @@ from keyboards.start_keyboard import *
 from keyboards.cars_in_stock_keyboard import *
 from filters.admin_filters import *
 
-
 router = Router()
 router.message.filter(ChatTypeFilter(["private"]))
+
 
 @router.message(F.text.lower() == 'авто в наявності')
 async def cars_cost_in_stock(message: Message, state: FSMContext):
     logging.info("cars in stock button")
     await state.set_state(BotStates.price_selection)
-    await message.answer('Який ваш комфортний бюджет для купівлі авто?', reply_markup=cars_in_stock_keyboard.cars_cost_in_stock_kb)
-    
-    
+    await message.answer('Який ваш комфортний бюджет для купівлі авто?',
+                         reply_markup=cars_in_stock_keyboard.cars_cost_in_stock_kb)
+
 
 @router.message(BotStates.price_selection)
-async def cars_year_in_stock(message: Message ,state: FSMContext):
-    await state.update_data(price_selection = message.text)
+async def cars_year_in_stock(message: Message, state: FSMContext):
+    await state.update_data(price_selection=message.text)
     await state.set_state(BotStates.year_selection)
     logging.info("Year in stock button")
-    await message.answer('Автомобіль яких років випуску ви розглядаєте?', reply_markup=cars_in_stock_keyboard.cars_year_in_stock_kb)
+    await message.answer('Автомобіль яких років випуску ви розглядаєте?',
+                         reply_markup=cars_in_stock_keyboard.cars_year_in_stock_kb)
 
-async def handle_price(price:str)->list:
+
+async def handle_price(price: str) -> list:
     logging.info('price convert to list')
     if '8 000' in price and '15 000' in price:
-        return [8000,15000]
+        return [8000, 15000]
     elif '8 000' in price and '15 000' not in price:
-        return [0,8000]
+        return [0, 8000]
     elif '15 000' in price and '20 000' in price:
-        return [15000,20000]
+        return [15000, 20000]
     else:
         return [20000, 10000000]
-async def handle_year(year:str)->list:
+
+
+async def handle_year(year: str) -> list:
     logging.info('year convert to list')
     if '2007' in year:
         return [0, 2007]
@@ -51,9 +54,10 @@ async def handle_year(year:str)->list:
     else:
         return [2019, 3000]
 
+
 @router.message(BotStates.year_selection)
-async def handle_data_to_sql(message: Message ,state: FSMContext,bot:Bot):
-    await state.update_data(year_select = message.text)
+async def handle_data_to_sql(message: Message, state: FSMContext, bot: Bot):
+    await state.update_data(year_select=message.text)
     user_input: dict = await state.get_data()
 
     price_text = user_input['price_selection']
@@ -66,7 +70,7 @@ async def handle_data_to_sql(message: Message ,state: FSMContext,bot:Bot):
     min_year = year_range_list[0]
     max_year = year_range_list[1]
     min_price = price_range_list[0]
-    max_price= price_range_list[1]
+    max_price = price_range_list[1]
     try:
         with sqlite3.connect("database/clients.db") as db:
             cur = db.cursor()
@@ -74,7 +78,7 @@ async def handle_data_to_sql(message: Message ,state: FSMContext,bot:Bot):
                 WHERE car_cost BETWEEN ? AND ?
                 AND car_year BETWEEN ? AND ?
                 """)
-            values = (min_price, max_price,min_year,max_year)
+            values = (min_price, max_price, min_year, max_year)
             cur.execute(query, values)
             rows = cur.fetchall()
             logging.info(f"SQL RESPONCE {rows}")
@@ -83,14 +87,14 @@ async def handle_data_to_sql(message: Message ,state: FSMContext,bot:Bot):
                 await message.answer('Поки  що у нас немає таких автомобілів в наявості, але ми обовязково привизем '
                                      'їх на замовлення.🚢', reply_markup=consult_and_main_kb)
             else:
-                await send_car_items(message,state,rows,bot)
+                await send_car_items(message, state, rows, bot)
 
 
     except Exception as ex:
         logging.error(f'ERROR FIND IN SQL WHEN SEARCH OUR CARS (CARS IN STOCK)  DB, {ex}')
 
 
-async def send_car_items(message: Message ,state: FSMContext,rows,bot:Bot):
+async def send_car_items(message: Message, state: FSMContext, rows, bot: Bot):
     logging.info('send_car_items')
     for row in rows:
         path_to_photo = row[1]
@@ -102,10 +106,11 @@ async def send_car_items(message: Message ,state: FSMContext,rows,bot:Bot):
         car_description = row[5]
         short_info_for_manager = f'{str(car_name)},{str(price)}$,{str(year)}р'
         try:
-            await bot.send_photo(chat_id=message.chat.id ,photo=photo,reply_markup=car_ikb(short_info_for_manager),caption=f"{car_name}\n"
-                                                                              f"Рік {year}р \n"
-                                                                              f"Ціна {price}$\n"
-                                                                              f"Опис {car_description}")
+            await bot.send_photo(chat_id=message.chat.id, photo=photo, reply_markup=car_ikb(short_info_for_manager),
+                                 caption=f"{car_name}\n"
+                                         f"Рік {year}р \n"
+                                         f"Ціна {price}$\n"
+                                         f"Опис {car_description}")
         except Exception as ex:
             logging.warning(f'PICTURE DIDNT FOUND{ex}')
             photo = FSInputFile(r"database\CarPhotos\unknown.jpg")

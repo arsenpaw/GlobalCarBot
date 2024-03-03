@@ -7,7 +7,7 @@ from aiogram import Bot, Dispatcher
 from Handlers import  *
 from Handlers import carfax_get_handlers, unhandled_message
 from Handlers import car_to_find_handlers
-from admin import admin_in_group_handler
+from admin.admin_in_group_handler import *
 async def run_function_every_two_minutes(bot:Bot):
     while True:
         logging.info('AUTOREQUEST')
@@ -28,7 +28,7 @@ async def main():
     logging.info(f'Server is: {bot.session.api.base}')
     dp = Dispatcher(bot=bot)
     dp.include_routers(base_handlers.router, estimated_cost_handlers.router, cars_in_stock_handlers.router, callback_user_chose_car.router,
-                       carfax_get_handlers.router, car_to_find_handlers.router, admin_in_group_handler.admin_group_router,
+                       carfax_get_handlers.router, car_to_find_handlers.router, admin_group_router,
                        unhandled_message.all_router)
     #unhandled_message.all_router is alwaise last !!!!
     #await asyncio.create_task(run_function_every_two_minutes(bot))
