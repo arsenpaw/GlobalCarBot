@@ -17,8 +17,9 @@ router.message.filter(ChatTypeFilter(["private"]))
 
 
 @router.message(CommandStart())
-async def command_start_handler(message: Message) -> None:
+async def command_start_handler(message: Message,state:FSMContext) -> None:
     logging.info("/command start")
+    await state.clear()
     await message.answer(f"<b>Привіт {message.from_user.first_name} !</b>\n"
                          f"Це чат-бот компанії Global Car 🚘🇺🇸 \n"
                          f"Ми займаємось доставкою автомобілів в будь-яку точку України 🇺🇦\n"

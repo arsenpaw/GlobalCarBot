@@ -84,8 +84,8 @@ async def handle_data_to_sql(message: Message, state: FSMContext, bot: Bot):
             logging.info(f"SQL RESPONCE {rows}")
             if len(rows) == 0:
                 await state.set_state(BotStates.contact_with_manager)
-                await message.answer('Поки  що у нас немає таких автомобілів в наявості, але ми обовязково привизем '
-                                     'їх на замовлення.🚢', reply_markup=consult_and_main_kb)
+                await message.answer('Поки  що у нас немає таких автомобілів в наявості, але ми обовязково їх привиземо'
+                                     'на замовлення.🚢', reply_markup=consult_and_main_kb)
             else:
                 await send_car_items(message, state, rows, bot)
 
@@ -108,16 +108,16 @@ async def send_car_items(message: Message, state: FSMContext, rows, bot: Bot):
         try:
             await bot.send_photo(chat_id=message.chat.id, photo=photo, reply_markup=car_ikb(short_info_for_manager),
                                  caption=f"{car_name}\n"
-                                         f"Рік {year}р \n"
-                                         f"Ціна {price}$\n"
-                                         f"Опис {car_description}")
+                                         f"Рік: {year}р \n"
+                                         f"Ціна: {price}$\n"
+                                         f"Опис: {car_description}")
         except Exception as ex:
             logging.warning(f'PICTURE DIDNT FOUND{ex}')
             photo = FSInputFile(r"database\CarPhotos\unknown.jpg")
             await bot.send_photo(chat_id=message.chat.id, photo=photo, reply_markup=car_ikb(short_info_for_manager),
                                  caption=f"{car_name}\n"
-                                         f"Рік {year}р \n"
-                                         f"Ціна {price}$\n"
-                                         f"Опис {car_description}")
+                                         f"Рік: {year}р \n"
+                                         f"Ціна: {price}$\n"
+                                         f"Опис: {car_description}")
 
     await message.answer('⬆️Виберіть авто яке вас зацікавило.⬆️',reply_markup=back_bome_kb)
