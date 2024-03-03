@@ -14,4 +14,4 @@ all_router.message.filter(ChatTypeFilter(["private"]))
 @all_router.message()
 async def unhandeler_message(message: Message,state:FSMContext) -> None:
     logging.info("/command start all message")
-    await command_start_handler(message)
+    await command_start_handler(message,state)
