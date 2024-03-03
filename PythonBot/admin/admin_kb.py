@@ -11,7 +11,10 @@ def admin_message_ikb(id: int):
     builder = InlineKeyboardBuilder()
     builder.button(text='Обробити', callback_data=AdminSelectCallback(foo="selected_item", id_selected=id))
     return builder.as_markup(resize_keyboard=True)
-
+def admin_car_ikb(id: int):
+    builder = InlineKeyboardBuilder()
+    builder.button(text='Видалити', callback_data=AdminSelectCallback(foo="admin_deleted", id_selected=id))
+    return builder.as_markup(resize_keyboard=True)
 
 admin_panel_private = ReplyKeyboardMarkup(
     keyboard=[

@@ -29,7 +29,7 @@ async def private_admin_handler(message: Message):
 @admin_private_router.message(F.text.lower() == 'додати авто')
 async def add_car_method(message: Message, state: FSMContext, bot: Bot):
     logging.info(f'add_car_method')
-    await message.answer("<b>Вводіть всю інформацю корректно щоб потім не їсти собі нервиу</b>")
+    await message.answer("<b>Вводіть всю інформацю корректно щоб потім не їсти собі нерви</b>")
     await message.answer("<b>Вкажіть назву</b>, \n Пишіть тільки марку і модель \n Приклад: Honda Acord")
     await state.set_state(BotStates.add_car_name)
 
@@ -39,7 +39,7 @@ async def add_name_to_car(message: Message, state: FSMContext, bot: Bot):
     try:
         name = str(message.text)
         await state.update_data(name = name)
-        await message.answer(f'<b>Надішліть фото.</b>', reply_markup=back_bome_kb)
+        await message.answer(f'<b>Надішліть фото.</b>', reply_markup=admin_panel_private)
         await state.set_state(BotStates.add_car_photo)
 
     except Exception as ex:
@@ -61,8 +61,8 @@ async def add_photo_to_car(message: Message, state: FSMContext, bot: Bot):
         await state.set_state(BotStates.add_car_price)
         await message.answer("<b>Вкажіть ціну</b>, \n Пишіть тільки суму в долларах США і нічого іншого \nПриклад: 9000")
     except Exception as ex:
-        await state.set_state(BotStates.add_car)
-        await message.answer(f'<b>Помилка збереження,можлив це не фото.</b>')
+        await state.set_state(BotStates.add_car_photo)
+        await message.answer(f'<b>Помилка збереження. \nНадішліть зображення ще раз або спробуйте інше .</b>')
         logging.warning(f'WRONG INPUT PHOTO:{ex}')
 
 
@@ -135,4 +135,5 @@ async def sent_admin_car_to_db(message: Message, state: FSMContext):
         else:
             await message.answer('Ойойо щось не так спройбуте пізніше')
         await message.answer(text='Ви в адмін панелі', reply_markup=admin_panel_private)
+        await state.clear()
 
