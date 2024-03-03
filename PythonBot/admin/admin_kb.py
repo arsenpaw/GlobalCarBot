@@ -26,3 +26,16 @@ admin_panel_private = ReplyKeyboardMarkup(
     resize_keyboard=True,
     one_time_keyboard=True
 )
+
+show_more_kb = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='Показати ще')
+        ],
+        [
+            KeyboardButton(text='Головне меню')
+        ]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=True
+)
