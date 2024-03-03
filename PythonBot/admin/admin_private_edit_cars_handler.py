@@ -136,11 +136,11 @@ async def callback_query_private(callback_query: CallbackQuery, callback_data: U
                 await callback_query.message.delete()
                 try:
                     os.remove(car_photo_path)
-                    await callback_query.message.answer('✅Машину видалено✅', reply_markup=admin.admin_kb.admin_panel_private)
+                    await callback_query.message.answer('✅Машину видалено✅', reply_markup=show_more_kb)
                 except Exception as ex:
                     logging.error(f'CAN NOT DELETE LOCAL FILE: {ex}')
                     await callback_query.message.answer('✅Машину видалено✅',
-                                                        reply_markup=admin.admin_kb.admin_panel_private)
+                                                        reply_markup=show_more_kb)
             else:
                 await callback_query.message.answer('❌Машину НЕ видалено❌')
                 logging.warning('CAR NOT DELETED FROM DB')

@@ -36,7 +36,16 @@ show_more_kb = ReplyKeyboardMarkup(
             KeyboardButton(text='Показати ще')
         ],
         [
-            KeyboardButton(text='Головне меню')
+            KeyboardButton(text='В адмін панель')
+        ]
+    ],
+    resize_keyboard=True,
+    one_time_keyboard=True
+)
+back_admin_kb = ReplyKeyboardMarkup(
+    keyboard=[
+        [
+            KeyboardButton(text='В адмін панель')
         ]
     ],
     resize_keyboard=True,

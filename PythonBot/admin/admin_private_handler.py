@@ -13,6 +13,7 @@ from admin.admin_kb import *
 from aiogram.types.file import File
 from keyboards.start_keyboard import *
 import uuid
+from keyboards.start_keyboard import back_bome_kb
 
 admin_private_router = Router()
 admin_private_router.message.filter(ChatTypeFilter(["private"]), IsAdmin())
@@ -20,7 +21,9 @@ admin_private_router.edited_message.filter(ChatTypeFilter(["private"]), IsAdmin(
 
 
 @admin_private_router.message(Command("admin"))
-async def private_admin_handler(message: Message):
+@admin_private_router.message(F.text.lower() == 'в адмін панель')
+async def private_admin_handler(message: Message,state:FSMContext):
+    await state.clear()
     logging.info(f'AUTHROIZE PRIVATE ADMIN {message.from_user.full_name}')
     await message.answer(f'<b>Ви в адмін панелі, виберіть функцію.</b>', reply_markup=admin_panel_private)
 
@@ -30,7 +33,7 @@ async def private_admin_handler(message: Message):
 async def add_car_method(message: Message, state: FSMContext, bot: Bot):
     logging.info(f'add_car_method')
     await message.answer("<b>Вводіть всю інформацю корректно щоб потім не їсти собі нерви</b>")
-    await message.answer("<b>Вкажіть назву</b>, \n Пишіть тільки марку і модель \n Приклад: Honda Acord")
+    await message.answer("<b>Вкажіть назву</b>, \nПишіть тільки марку і модель \nПриклад: Honda Acord", reply_markup=back_admin_kb)
     await state.set_state(BotStates.add_car_name)
 
 @admin_private_router.message(BotStates.add_car_name)
@@ -39,7 +42,7 @@ async def add_name_to_car(message: Message, state: FSMContext, bot: Bot):
     try:
         name = str(message.text)
         await state.update_data(name = name)
-        await message.answer(f'<b>Надішліть фото.</b>', reply_markup=admin_panel_private)
+        await message.answer(f'<b>Надішліть фото.</b>', reply_markup=back_admin_kb)
         await state.set_state(BotStates.add_car_photo)
 
     except Exception as ex:
@@ -59,7 +62,7 @@ async def add_photo_to_car(message: Message, state: FSMContext, bot: Bot):
         await bot.download_file(file_path, final_path)
         await state.update_data(path_to_photo=final_path)
         await state.set_state(BotStates.add_car_price)
-        await message.answer("<b>Вкажіть ціну</b>, \n Пишіть тільки суму в долларах США і нічого іншого \nПриклад: 9000")
+        await message.answer("<b>Вкажіть ціну</b>, \n Пишіть тільки суму в долларах США і нічого іншого \nПриклад: 9000", reply_markup=back_admin_kb)
     except Exception as ex:
         await state.set_state(BotStates.add_car_photo)
         await message.answer(f'<b>Помилка збереження. \nНадішліть зображення ще раз або спробуйте інше .</b>')
@@ -74,7 +77,7 @@ async def add_price_to_car(message: Message, state: FSMContext, bot: Bot):
         price = int(message.text)
         await state.update_data(price=price)
         await state.set_state(BotStates.add_car_year)
-        await message.answer('Введіть рік, вказуюючи тільки цифру \n Наприклад: 2009')
+        await message.answer('Введіть рік, вказуюючи тільки цифру \n Наприклад: 2009',reply_markup=back_admin_kb)
     except Exception as ex:
         logging.warning(f'WRONG INPUT, NEED ONLY NUMS {ex}')
         await message.answer('Введіть суму, вказуюючи тільки цифри !!!. ')
@@ -88,7 +91,7 @@ async def add_year_to_car(message: Message, state: FSMContext, bot: Bot):
         year = int(message.text)
         await state.update_data(year=year)
         await state.set_state(BotStates.add_car_desctiption)
-        await message.answer('<b>Введіть опис</b> \nПриклад: Крута машина.')
+        await message.answer('<b>Введіть опис</b> \nПриклад: Крута машина.',reply_markup=back_admin_kb)
     except Exception as ex:
         logging.warning(f'WRONG INPUT, NEED ONLY NUMS {ex}')
         await message.answer('Введіть рік, вказуюючи тільки цифру !!!. \n Наприклад: 2009')
@@ -131,9 +134,7 @@ async def sent_admin_car_to_db(message: Message, state: FSMContext):
     finally:
         result = await is_object_added(cur)
         if result is True:
-            await message.answer('Товар успішно доданий')
+            await message.answer('Товар успішно доданий',reply_markup=back_admin_kb)
         else:
-            await message.answer('Ойойо щось не так спройбуте пізніше')
-        await message.answer(text='Ви в адмін панелі', reply_markup=admin_panel_private)
-        await state.clear()
+            await message.answer('Ойойо щось не так спройбуте пізніше',reply_markup=back_admin_kb)
 
