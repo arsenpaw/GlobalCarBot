@@ -1,8 +1,5 @@
 import logging
 import asyncio
-
-
-
 from config_reader import config
 from aiogram import Bot, Dispatcher
 from Handlers import  *
