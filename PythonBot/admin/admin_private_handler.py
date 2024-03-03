@@ -29,14 +29,15 @@ async def private_admin_handler(message: Message):
 @admin_private_router.message(F.text.lower() == 'додати авто')
 async def add_car_method(message: Message, state: FSMContext, bot: Bot):
     logging.info(f'add_car_method')
-    await message.answer("<b>Вкажіть назву</b>, \n Пишіть тільки марку та модель")
+    await message.answer("<b>Вводіть всю інформацю корректно щоб потім не їсти собі нервиу</b>")
+    await message.answer("<b>Вкажіть назву</b>, \n Пишіть тільки марку і модель \n Приклад: Honda Acord")
     await state.set_state(BotStates.add_car_name)
 
 @admin_private_router.message(BotStates.add_car_name)
 async def add_name_to_car(message: Message, state: FSMContext, bot: Bot):
     logging.info(f'add_name_to_car')
     try:
-        name = message.text
+        name = str(message.text)
         await state.update_data(name = name)
         await message.answer(f'<b>Надішліть фото.</b>', reply_markup=back_bome_kb)
         await state.set_state(BotStates.add_car_photo)
@@ -58,7 +59,7 @@ async def add_photo_to_car(message: Message, state: FSMContext, bot: Bot):
         await bot.download_file(file_path, final_path)
         await state.update_data(path_to_photo=final_path)
         await state.set_state(BotStates.add_car_price)
-        await message.answer("<b>Вкажіть ціну</b>, \n Пишіть тільки суму в долларах США і нічого іншого")
+        await message.answer("<b>Вкажіть ціну</b>, \n Пишіть тільки суму в долларах США і нічого іншого \nПриклад: 9000")
     except Exception as ex:
         await state.set_state(BotStates.add_car)
         await message.answer(f'<b>Помилка збереження,можлив це не фото.</b>')
@@ -73,10 +74,10 @@ async def add_price_to_car(message: Message, state: FSMContext, bot: Bot):
         price = int(message.text)
         await state.update_data(price=price)
         await state.set_state(BotStates.add_car_year)
-        await message.answer('Введіть рік, вказуюючи тільки цифру')
+        await message.answer('Введіть рік, вказуюючи тільки цифру \n Наприклад: 2009')
     except Exception as ex:
         logging.warning(f'WRONG INPUT, NEED ONLY NUMS {ex}')
-        await message.answer('Введіть суму, вказуюючи тільки цифри !!!. \n Наприклад: 20000')
+        await message.answer('Введіть суму, вказуюючи тільки цифри !!!. ')
         await state.set_state(BotStates.add_car_price)
 
 @admin_private_router.message(BotStates.add_car_year)
@@ -87,7 +88,7 @@ async def add_year_to_car(message: Message, state: FSMContext, bot: Bot):
         year = int(message.text)
         await state.update_data(year=year)
         await state.set_state(BotStates.add_car_desctiption)
-        await message.answer('Введіть опис')
+        await message.answer('<b>Введіть опис</b> \nПриклад: Крута машина.')
     except Exception as ex:
         logging.warning(f'WRONG INPUT, NEED ONLY NUMS {ex}')
         await message.answer('Введіть рік, вказуюючи тільки цифру !!!. \n Наприклад: 2009')
@@ -98,7 +99,7 @@ async def add_description_to_car(message: Message, state: FSMContext, bot: Bot):
     logging.info('add_description_to_car')
     logging.info(await state.get_data())
     try:
-        description = message.text
+        description = str(message.text)
         await state.update_data(description=description)
         await sent_admin_car_to_db(message,state)
     except Exception as ex:
